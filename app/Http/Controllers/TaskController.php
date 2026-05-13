@@ -27,23 +27,6 @@ class TaskController extends Controller
         ]);
     }
 
-    public function store(Request $request, $projectId)
-    {
-        $project = Project::findOrFail($projectId);
-
-        $data = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'status' => 'required|in:todo,in_progress,done',
-            'priority' => 'required|in:low,medium,high',
-            'due_date' => 'nullable|date',
-        ]);
-
-        $project->tasks()->create($data);
-
-        return redirect()->route('projects.tasks.index', $projectId);
-    }
-
     public function edit($projectId, $taskId)
     {
         $task = Task::findOrFail($taskId);
@@ -53,10 +36,9 @@ class TaskController extends Controller
         ]);
     }
 
-    public function update(Request $request, $projectId, $taskId)
+    public function store(Request $request, $projectId)
     {
-        $task = Task::findOrFail($taskId);
-
+        $project = Project::findOrFail($projectId);
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -64,17 +46,30 @@ class TaskController extends Controller
             'priority' => 'required|in:low,medium,high',
             'due_date' => 'nullable|date',
         ]);
-
-        $task->update($data);
-
-        return redirect()->route('projects.tasks.index', $projectId);
+        $project->tasks()->create($data);
+        // 👉 rimanda alla pagina del progetto
+        return redirect()->route('projects.show', $projectId)
+            ->with('success', 'Task aggiunta con successo');
     }
-
+    public function update(Request $request, $projectId, $taskId)
+    {
+        $task = Task::findOrFail($taskId);
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'status' => 'required|in:todo,in_progress,done',
+            'priority' => 'required|in:low,medium,high',
+            'due_date' => 'nullable|date',
+        ]);
+        $task->update($data);
+        return redirect()->route('projects.show', $projectId)
+            ->with('success', 'Task aggiornata correttamente');
+    }
     public function destroy($projectId, $taskId)
     {
         $task = Task::findOrFail($taskId);
         $task->delete();
-
-        return redirect()->route('projects.tasks.index', $projectId);
+        return redirect()->route('projects.show', $projectId)
+            ->with('success', 'Task eliminata correttamente');
     }
 }

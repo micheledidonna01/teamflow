@@ -1,6 +1,27 @@
-import { useForm, Link } from '@inertiajs/react';
+import { useForm, Link, Form } from '@inertiajs/react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
-export default function Edit({ project, teams }) {
+interface PageProps {
+    project: Project;
+    teams: Team[];
+}
+
+interface Project {
+    id: number;
+    name: string;
+    description: string | null;
+    status: string;
+    due_date: string | null;
+    team_id: number;
+}
+
+interface Team {
+    id: number;
+    name: string;
+}  
+
+export default function Edit({ project }: PageProps) {
     const { data, setData, put } = useForm({
         team_id: project.team_id,
         name: project.name,
@@ -9,7 +30,7 @@ export default function Edit({ project, teams }) {
         due_date: project.due_date || ''
     });
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         put(`/projects/${project.id}`);
     };
@@ -17,19 +38,9 @@ export default function Edit({ project, teams }) {
     return (
         <div className="p-6">
             <h1 className="text-2xl font-bold mb-4">Edit Project</h1>
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <select
-                    value={data.team_id}
-                    onChange={(e) => setData('team_id', e.target.value)}
-                    className="border p-2"
-                    required
-                >
-                    {teams.map((t: any) => (
-                        <option key={t.id} value={t.id}>{t.name}</option>
-                    ))}
-                </select>
+            <Form onSubmit={handleSubmit} className="space-y-4">
 
-                <input
+                <Input
                     type="text"
                     value={data.name}
                     onChange={(e) => setData('name', e.target.value)}
@@ -52,18 +63,18 @@ export default function Edit({ project, teams }) {
                     <option value="completed">Completed</option>
                 </select>
 
-                <input
+                <Input
                     type="date"
                     value={data.due_date}
                     onChange={(e) => setData('due_date', e.target.value)}
                     className="border p-2"
                 />
 
-                <button type="submit" className="bg-green-500 text-white px-4 py-2">
+                <Button type="submit" className="bg-green-500 text-white px-4 py-2">
                     Update
-                </button>
+                </Button>
                 <Link href="/projects" className="ml-4 text-gray-500">Cancel</Link>
-            </form>
+            </Form>
         </div>
     );
 }

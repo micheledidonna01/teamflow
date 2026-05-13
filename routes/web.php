@@ -44,6 +44,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->group(function () {
                 Route::get('/', 'index')->name('index');
                 Route::get('/create', 'create')->name('create');
+                Route::get('/{team}/edit', 'edit')->name('edit');
                 Route::post('/', 'store')->name('store');
                 Route::get('/{team}', 'show')->name('show');
                 Route::put('/{team}', 'update')->name('update');
