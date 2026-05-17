@@ -10,8 +10,13 @@ use Inertia\Inertia;
 class ProjectController extends Controller
 {
     /* VISUALIZZA */
-    public function index(){
-        $projects = Project::with('team')->get();
+    public function index()
+    {
+        // Recuperiamo i progetti filtrando per i team dell'utente
+        $projects = Project::with('team')
+            ->whereIn('team_id', auth()->user()->teams->pluck('id'))
+            ->get();
+
         return Inertia::render('projects/Index', [
             'projects' => $projects,
         ]);
@@ -19,18 +24,25 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
+        // Verifichiamo che l'utente appartenga al team del progetto
+        if (!auth()->user()->teams->contains($project->team_id)) {
+            abort(403, 'Non hai i permessi per visualizzare questo progetto.');
+        }
+
         $project->load([
             'tasks',
-            'team.owner'
+            'team.creator' // Nota: usa 'creator' se è il nome della relazione definita prima
         ]);
 
         return Inertia::render('projects/Show', [
             'project' => $project,
             'tasks'   => $project->tasks,
             'team'    => $project->team,
-            'owner'   => $project->team->owner,
+            'owner'   => $project->team->creator, // O 'owner' se hai quel nome nel modello
         ]);
     }
+
+
 
 
     public function create()

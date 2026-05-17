@@ -6,8 +6,10 @@ use App\Http\Controllers\{
     ProjectController,
     TaskController,
     TeamController,
-    UserController
+    UserController,
+    DashboardController
 };
+
 use Inertia\Inertia;
 
 /*
@@ -28,8 +30,7 @@ Route::inertia('/', 'welcome', [
 Route::middleware(['auth', 'verified'])->group(function () {
 
     // Dashboard di default
-    Route::inertia('dashboard', 'dashboard')->name('dashboard');
-
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     /*
     |--------------------------------------------------------------------------
     | Management routes (Teams, Projects, Tasks, Users)

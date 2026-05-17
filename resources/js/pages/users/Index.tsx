@@ -1,20 +1,6 @@
-import { Head, Link, router } from '@inertiajs/react';
-import { useState, useEffect } from 'react';
+import { Head, Link } from '@inertiajs/react';
 
-export default function Index({ users, filters }: any) {
-    const [search, setSearch] = useState(filters.search || '');
-
-    // Logica di ricerca con "debounce" (scatta dopo 300ms che hai smesso di scrivere)
-    useEffect(() => {
-        const delayDebounceFn = setTimeout(() => {
-            router.get('/admin/users', { search: search }, { 
-                preserveState: true, 
-                replace: true 
-            });
-        }, 300);
-
-        return () => clearTimeout(delayDebounceFn);
-    }, [search]);
+export default function Index({ users }: any) {
 
     return (
         <div className="p-8">

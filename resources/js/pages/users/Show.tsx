@@ -21,9 +21,9 @@ export default function Show({ user }: any) {
                 <h2 className="text-xl font-semibold mb-4">Team di cui fa parte:</h2>
                 <div className="grid gap-2">
                     {user.teams?.map((team: any) => (
-                        <div key={team.id} className="p-3 bg-gray-50 dark:bg-gray-700 rounded">
+                        <Link href={`/admin/teams/${team.id}`} key={team.id} className="p-3 bg-gray-50 dark:bg-gray-700 rounded">
                             {team.name}
-                        </div>
+                        </Link>
                     ))}
                 </div>
             </div>
