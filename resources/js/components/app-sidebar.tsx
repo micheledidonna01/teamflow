@@ -1,9 +1,13 @@
 import { Link } from '@inertiajs/react';
-import { BookOpen, FolderGit2, LayoutGrid, PersonStanding } from 'lucide-react';
+import {usePage} from '@inertiajs/react';
+import { AccessibilityIcon, BookOpen, FolderGit2, LayoutGrid, PersonStanding } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
+
+// import users from '@/routes/users';
+
 import {
     Sidebar,
     SidebarContent,
@@ -15,6 +19,8 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
+
+
 
 const mainNavItems: NavItem[] = [
     {
@@ -32,6 +38,11 @@ const mainNavItems: NavItem[] = [
         href: '/admin/teams',
         icon: PersonStanding,
     },
+    // {
+    //     title: 'Profile',
+    //     href: `/admin/settings/profile/${admin.profile()}`,
+    //     icon: AccessibilityIcon,
+    // },
 ];
 
 const footerNavItems: NavItem[] = [
@@ -48,6 +59,10 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
+
+    const { auth } = usePage().props;
+    const user = auth.user;
+    
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>

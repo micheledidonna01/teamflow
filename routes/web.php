@@ -7,9 +7,10 @@ use App\Http\Controllers\{
     TaskController,
     TeamController,
     UserController,
-    DashboardController
+    DashboardController,
+    ProfileViewController,
 };
-
+use App\Http\Controllers\Settings\ProfileController;
 use Inertia\Inertia;
 
 /*
@@ -37,6 +38,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::prefix('admin')->group(function () {
+
+        // PROFILE
+        Route::controller(ProfileViewController::class)
+            ->prefix('profile')
+            ->name('profile.')
+            ->group(function () {
+                Route::get('/', 'show')->name('show'); 
+            });
 
         // 🧩 TEAMS
         Route::controller(TeamController::class)
@@ -89,8 +98,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->group(function () {
                 Route::get('/', 'index')->name('index');
                 Route::get('/{user}', 'show')->name('show');
-                Route::put('/{user}', 'update')->name('update');
-                Route::delete('/{user}', 'destroy')->name('destroy');
             });
     });
 });
